@@ -1,3 +1,54 @@
+import datetime
+
+
+def request_book_title():
+    while True:
+        try:
+            title = input("Введите название книги: ")
+            return title
+        except ValueError:
+            print("Ошибка: поле не заполнено!")
+
+
+def request_author_name():
+    while True:
+        try:
+            name = input("Введите имя и фамилию автора (через пробел): ")
+            is_error = validate_author(" ".join(name.split()))
+            if is_error:
+                print(is_error)
+            else:
+                return name
+        except ValueError:
+            print("Ошибка: поле не заполнено!")
+
+
+def request_publish_date():
+    while True:
+        try:
+            year = int(input("Введите дату публикации: "))
+            if year < 1800 or year > datetime.date.today().year:
+                print("Ошибка: введено значение за пределами установленного "
+                      "диапазона!")
+            else:
+                return year
+        except ValueError:
+            print("Ошибка: введено нечисловое значение!")
+
+
+def validate_author(name):
+    if len(name) < 6 or len(name) > 30:
+        return ("Ошибка: длина введенного значения не соответствует "
+                "установленному диапазон!")
+
+    allowed_characters = set("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ' абвгдеёжзий"
+                             "клмнопрстуфхцчшщъыьэюя")
+    for letter in name:
+        if letter not in allowed_characters:
+            return "Ошибка: введено недопустимое значение!"
+    return ""
+
+
 def book_list_view():
     if library:
         print("\n-----СПИСОК КНИГ-----")
