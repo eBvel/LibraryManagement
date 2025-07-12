@@ -96,17 +96,32 @@ def to_ask(question):
             print("Ошибка: введен некорректный ответ!")
 
 
+def add_book_to_library():
+    title = request_book_title()
+    author = request_author_name()
+    year = request_publish_date()
+    add_book(title, author, year)
+
+
+def complete_program():
+    global at_work
+    at_work = False
+    print("Программа завершена!")
+
+
 def start_menu():
     print("""
 -------БИБЛИОТЕКА-------
  МЕНЮ:
  1. Вывести список книг;
  2. Добавить книгу;
-""")
+ 3. Выход.""")
 
 
 def main():
-    book_list_view()
+    while at_work:
+        menu_operations = {1: book_list_view, 2: add_book_to_library, 3: complete_program}
+        request_menu_item(menu_operations)
 
 
 author_key = 'author'
@@ -125,4 +140,6 @@ library = {
     "Отцы и дети": {author_key: "Иван Тургенев", year_key: 2003,
                     available_key: True}
 }
+at_work = True
+start_menu()
 main()
