@@ -131,13 +131,20 @@ def find_book(library, title):
 
 
 def get_book_data(title, book):
+    statuses = {
+        True: "Книга доступна",
+        False: "Книга выдана",
+        None: "Книга в библиотеке, но ее статус не определен!"
+    }
     return (f"Название книги: {title}\nАвтор: {book[author_key]}\n"
             f"Год выпуска: {book[year_key]}\nВ наличие: "
-            f"{'есть' if book[available_key] else 'нет'}")
-
+            f"{statuses[book[available_key]]}")
 
 def to_ask(question):
-    answers = {'да': True, 'нет': False}
+    answers = {
+        'да': True,
+        'нет': False
+    }
     while True:
         try:
             answer = input(f"{question} (да/нет): ").lower()
@@ -173,7 +180,7 @@ def find_book_in_library(library):
     find_book(library, title)
 
 
-def complete_program():
+def complete_program(library):
     global at_work
     at_work = False
     print("Программа завершена!")
@@ -221,10 +228,13 @@ def main():
         }
     }
     while at_work:
-        menu_operations = {1: book_list_view, 2: add_book_to_library,
-                           3: remove_book_from_library,
-                           4: issue_book_to_reader, 5: return_book_to_library,
-                           6: find_book_in_library, 7: complete_program}
+        menu_operations = {
+            1: book_list_view,
+            2: add_book_to_library,
+            3: remove_book_from_library,
+            4: issue_book_to_reader, 5: return_book_to_library,
+            6: find_book_in_library, 7: complete_program
+        }
         request_menu_item(menu_operations, library)
 
 
