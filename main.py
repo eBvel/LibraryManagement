@@ -86,6 +86,14 @@ def add_book(title, author, year):
         perform_addition(f"Книга '{title}' - добавлена в библиотеку!")
 
 
+def remove_book(title):
+    if title in library:
+        del library[title]
+        print(f"Книга '{title}' - удалена из библиотеки!")
+    else:
+        print(f"Книга '{title}' - отсутствует в библиотеке!")
+
+
 def to_ask(question):
     answers = {'да': True, 'нет': False}
     while True:
@@ -103,6 +111,11 @@ def add_book_to_library():
     add_book(title, author, year)
 
 
+def remove_book_from_library():
+    title = request_book_title()
+    remove_book(title)
+
+
 def complete_program():
     global at_work
     at_work = False
@@ -115,12 +128,14 @@ def start_menu():
  МЕНЮ:
  1. Вывести список книг;
  2. Добавить книгу;
- 3. Выход.""")
+ 3. Удалить книгу;
+ 4. Выход.""")
 
 
 def main():
     while at_work:
-        menu_operations = {1: book_list_view, 2: add_book_to_library, 3: complete_program}
+        menu_operations = {1: book_list_view, 2: add_book_to_library,
+                           3: remove_book_from_library, 4: complete_program}
         request_menu_item(menu_operations)
 
 
