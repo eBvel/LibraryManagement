@@ -1,10 +1,10 @@
 import datetime
 
 
-def request_menu_item(menu_operations):
+def request_menu_item(menu_operations, library):
     try:
         menu_item = int(input("\nВведите пункт меню: "))
-        menu_operations[menu_item]()
+        menu_operations[menu_item](library)
     except ValueError:
         print("Ошибка: введено некорректное значение!")
     except KeyError:
@@ -59,7 +59,7 @@ def validate_author(name):
     return ""
 
 
-def book_list_view():
+def book_list_view(library):
     if library:
         print("\n-----СПИСОК КНИГ-----")
         for book in library.keys():
@@ -68,7 +68,7 @@ def book_list_view():
         print("\nВ библиотеке отсутствуют книги!")
 
 
-def add_book(title, author, year):
+def add_book(library, title, author, year):
     def perform_addition(text):
         new_book = {title: {author_key: author, year_key: year,
                             available_key: None}}
@@ -86,12 +86,43 @@ def add_book(title, author, year):
         perform_addition(f"Книга '{title}' - добавлена в библиотеку!")
 
 
-def remove_book(title):
+def is_book_in_library(library, title):
     if title in library:
-        del library[title]
-        print(f"Книга '{title}' - удалена из библиотеки!")
+        return True
     else:
         print(f"Книга '{title}' - отсутствует в библиотеке!")
+        return False
+
+
+def remove_book(library, title):
+    if is_book_in_library(library, title):
+        del library[title]
+        print(f"Книга '{title}' - удалена из библиотеки!")
+
+
+def change_book_availability(library, title, is_return=False):
+    if is_book_in_library(library, title):
+        book = library[title]
+        if book[available_key] and is_return:
+            return False
+        if book[available_key] or is_return:
+            book[available_key] = is_return
+            return True
+    return False
+
+
+def issue_book(library, title):
+    if change_book_availability(library, title):
+        print(f"Книга '{title}' - выдана!")
+    else:
+        print(f"Книги '{title}' - нет в наличии!")
+
+
+def return_book(library, title):
+    if change_book_availability(library, title, True):
+        print(f"Книга '{title}' - возвращена!")
+    else:
+        print(f"Книги '{title}' уже в наличии!")
 
 
 def to_ask(question):
@@ -104,16 +135,26 @@ def to_ask(question):
             print("Ошибка: введен некорректный ответ!")
 
 
-def add_book_to_library():
+def add_book_to_library(library):
     title = request_book_title()
     author = request_author_name()
     year = request_publish_date()
-    add_book(title, author, year)
+    add_book(library, title, author, year)
 
 
-def remove_book_from_library():
+def remove_book_from_library(library):
     title = request_book_title()
-    remove_book(title)
+    remove_book(library, title)
+
+
+def issue_book_to_reader(library):
+    title = request_book_title()
+    issue_book(library, title)
+
+
+def return_book_to_library(library):
+    title = request_book_title()
+    return_book(library, title)
 
 
 def complete_program():
@@ -129,32 +170,37 @@ def start_menu():
  1. Вывести список книг;
  2. Добавить книгу;
  3. Удалить книгу;
- 4. Выход.""")
+ 4. Выдать книгу читателю;
+ 5. Возврат книги в бибилиотеку;
+ 6. Выход из программы.""")
 
 
 def main():
+    library = {
+        "Преступление и наказание": {author_key: "Федор Достоевский",
+                                     year_key: 1990,
+                                     available_key: False},
+        "Идиот": {author_key: "Федор Достоевский", year_key: 1998,
+                  available_key: True},
+        "Капитанская дочка": {author_key: "Александр Пушкин",
+                              year_key: 2001, available_key: False},
+        "Вишневый сад": {author_key: "Антон Чехов", year_key: 1995,
+                         available_key: True},
+        "Отцы и дети": {author_key: "Иван Тургенев", year_key: 2003,
+                        available_key: True}
+    }
+
     while at_work:
         menu_operations = {1: book_list_view, 2: add_book_to_library,
-                           3: remove_book_from_library, 4: complete_program}
-        request_menu_item(menu_operations)
+                           3: remove_book_from_library,
+                           4: issue_book_to_reader, 5: return_book_to_library,
+                           6: complete_program}
+        request_menu_item(menu_operations, library)
 
 
 author_key = 'author'
 year_key = 'publish_date'
 available_key = 'is_available'
-library = {
-    "Преступление и наказание": {author_key: "Федор Достоевский",
-                                 year_key: 1990,
-                                 available_key: False},
-    "Идиот": {author_key: "Федор Достоевский", year_key: 1998,
-              available_key: True},
-    "Капитанская дочка": {author_key: "Александр Пушкин",
-                          year_key: 2001, available_key: False},
-    "Вишневый сад": {author_key: "Антон Чехов", year_key: 1995,
-                     available_key: True},
-    "Отцы и дети": {author_key: "Иван Тургенев", year_key: 2003,
-                    available_key: True}
-}
 at_work = True
 start_menu()
 main()
