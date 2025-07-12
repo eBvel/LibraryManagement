@@ -1,6 +1,16 @@
 import datetime
 
 
+def request_menu_item(menu_operations):
+    try:
+        menu_item = int(input("\nВведите пункт меню: "))
+        menu_operations[menu_item]()
+    except ValueError:
+        print("Ошибка: введено некорректное значение!")
+    except KeyError:
+        print("Ошибка: указанный пункт меню отсутствует!")
+
+
 def request_book_title():
     while True:
         try:
@@ -84,6 +94,15 @@ def to_ask(question):
             return answers[answer]
         except KeyError:
             print("Ошибка: введен некорректный ответ!")
+
+
+def start_menu():
+    print("""
+-------БИБЛИОТЕКА-------
+ МЕНЮ:
+ 1. Вывести список книг;
+ 2. Добавить книгу;
+""")
 
 
 def main():
